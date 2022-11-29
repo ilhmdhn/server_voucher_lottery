@@ -5,3 +5,4 @@
 /log_error-2022-11.log
 /node_modules
 /package-lock.json
+*.pdf
