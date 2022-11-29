@@ -3,6 +3,7 @@ const app = express();
 require('dotenv').config();
 const {databaseTest} = require('./util/database-tool');
 const bodyParser = require('body-parser');
+const logger = require('../src/util/logger');
 const port = process.env.PORT;
 
 // import router
@@ -12,8 +13,6 @@ const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization']
     const token = authHeader;
     if (token == null) return res.sendStatus(401)
-  
-    console.log('token '+process.env.ZENVIVA_PASSWORD,);
 
     if (token == process.env.ZENVIVA_PASSWORD){
         next()
@@ -26,8 +25,13 @@ const authenticateToken = (req, res, next) => {
     }
 }
 
+const loggerRequest = (req, res, next) =>{
+    logger.info(`Receive request ${req.method} ${req.originalUrl}`)
+    next()
+}
+
 app.listen(port, async()=>{
-    console.log(`App Running on ${process.env.PORT} port`);
+    logger.info(`App Running on ${process.env.PORT} port`);
 })
 
 app.get('/', async (req, res)=>{
@@ -39,6 +43,7 @@ app.get('/', async (req, res)=>{
 app.use(bodyParser.json());
 app.use(bodyParser.raw());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(loggerRequest)
 app.use(authenticateToken);
 //use router
 app.use(voucherRoute);

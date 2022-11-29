@@ -2,7 +2,7 @@ const {mysqlConfig} = require('./database-tool');
 const logger = require('../util/logger');
 
 const generateVoucherCode = (voucherData) =>{
-    return new Promise(async(resolve) =>{
+    return new Promise(async(resolve, reject) =>{
         try{
             const todayVoucher = await getTotalVoucherToday(voucherData);
             const totalVoucherToday = (todayVoucher+1).toString().padStart(5, '0');
@@ -15,13 +15,12 @@ const generateVoucherCode = (voucherData) =>{
 }
 
 const getTotalVoucherToday = (voucher) =>{
-    return new Promise(async(resolve) =>{
+    return new Promise(async(resolve, reject) =>{
         try{
 
             const query = `
-            SELECT SUM(*) as total FROM MasterVoucher WHERE voucher_code LIKE '${voucher}%'
+            SELECT count(*) as total FROM MasterVoucher WHERE voucher_code LIKE '${voucher}%'
             `
-
             const mysql = await mysqlConfig();
             mysql.connect((err)=>{
                 if(err){
@@ -30,7 +29,7 @@ const getTotalVoucherToday = (voucher) =>{
                 }else{
                     mysql.query(query, (err, results) =>{
                         if(err){
-                            logger.error(`getTotalVoucherToday query ${err}`);
+                            logger.error(`getTotalVoucherToday query ${err} \n${query}`);
                             reject(`getTotalVoucherToday ${err}`);
                         }else{
                             resolve(results[0].total);
