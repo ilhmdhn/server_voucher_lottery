@@ -1,5 +1,5 @@
-const {insertVoucherData} = require('../model/voucher-data');
-const {generateVoucherCode} = require('../util/code');
+const {insertVoucherData, insertEmailData} = require('../model/voucher-data');
+const {generateVoucherCode, generateEmailId} = require('../util/code');
 const response = require('../util/response');
 const logger = require('../util/logger');
 const generatePdf = require('../util/pdfkit');
@@ -17,8 +17,10 @@ const postVoucher = async(req, res) =>{
         const guest_charge = req.body.guest_charge;
         const transaction_date = req.body.transaction_date;
         
+        const email_id = await generateEmailId();
+        await insertEmailData(email_id,guest_email)
+        
         let guestChargeTemp = guest_charge;
-        console.log('jumlah charge '+guestChargeTemp);
         do{
             const voucher_code = await generateVoucherCode(voucher_code_temp)
             const voucherData = {
@@ -28,13 +30,13 @@ const postVoucher = async(req, res) =>{
                 guestName: guest_name,
                 guestInstagram: guest_instagram,
                 guestPhone: guest_phone,
-                guestEmail: guest_email,
+                guestEmail: email_id,
                 guestKtp: guest_ktp,
                 guestCharge: guest_charge,
                 transactionDate: transaction_date
             }
             await insertVoucherData(voucherData);
-            await generatePdf(voucher_code);       
+            await generatePdf(voucher_code, email_id);
             guestChargeTemp = guestChargeTemp - 100000;
         }while(guestChargeTemp >= 100000)
         res.send(response(true, null, 'Success Add Voucher'));

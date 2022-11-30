@@ -1,8 +1,9 @@
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
+const {insertFileNameData} = require('../model/voucher-data');
 
-const generatePdf = (voucherCode) =>{
-    return new Promise((resolve, reject) =>{
+const generatePdf = (voucherCode, emailId) =>{
+    return new Promise(async(resolve, reject) =>{
         try{
             const doc = new PDFDocument({size: 'A7', layout: 'landscape', margin:0})
             doc.pipe(fs.createWriteStream(__dirname+`../../../storage/voucherpdf/${voucherCode}.pdf`))
@@ -16,7 +17,8 @@ const generatePdf = (voucherCode) =>{
                     align: 'center'
                 })
                 .end();
-                console.log('success create pdf');
+                console.log('success create pdf '+voucherCode);
+                await insertFileNameData(voucherCode+'.pdf', emailId);
                 resolve(true);
         }catch(err){
             console.log('failed create pdf');

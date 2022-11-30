@@ -1,4 +1,5 @@
 const {mysqlConfig} = require('./database-tool');
+const moment = require('moment');
 const logger = require('../util/logger');
 
 const generateVoucherCode = (voucherData) =>{
@@ -45,8 +46,50 @@ const getTotalVoucherToday = (voucher) =>{
     });
 }
 
-//kodeoulet + YY + MM + DD + 000001
+const generateEmailId = () =>{
+    return new Promise(async(resolve, reject)=>{
+        try{
+
+            const date = moment().format('YYMMDD');
+
+            const sendTotalEmailToday = await getTotalEmailToday(date);
+            const emailId = date + (sendTotalEmailToday+1).toString().padStart(5, '0')
+            resolve(emailId);
+        }catch(err){
+            reject(`generateEmailId ${err}`);
+        }
+    })
+}
+
+const getTotalEmailToday = (date) =>{
+    return new Promise((resolve, reject) =>{
+        try{
+
+            const query = `
+            SELECT count(*) as total FROM MasterEmail WHERE id LIKE '${date}%'
+            `
+
+            const mysql = mysqlConfig();
+            mysql.connect((err)=>{
+                if(err){
+
+                }else{
+                    mysql.query(query, (err, result) =>{
+                        if(err){
+                            reject(`getTotalEmailToday query \n${err}\n${query}`);
+                        }else{
+                            resolve(result[0].total)
+                        }
+                    });
+                }
+            });
+        }catch(err){
+            reject(`getTotalEmailToday ${err}`);
+        }
+    })
+}
 
 module.exports = {
-    generateVoucherCode
+    generateVoucherCode,
+    generateEmailId
 }
