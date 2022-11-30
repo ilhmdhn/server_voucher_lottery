@@ -62,14 +62,14 @@ const generateEmailId = () =>{
 }
 
 const getTotalEmailToday = (date) =>{
-    return new Promise((resolve, reject) =>{
+    return new Promise(async(resolve, reject) =>{
         try{
 
             const query = `
-            SELECT count(*) as total FROM MasterEmail WHERE id LIKE '${date}%'
+            SELECT count(*) as total FROM MasterEmail WHERE email_id LIKE '${date}%'
             `
 
-            const mysql = mysqlConfig();
+            const mysql = await mysqlConfig();
             mysql.connect((err)=>{
                 if(err){
 

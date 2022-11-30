@@ -6,9 +6,9 @@ const insertEmailData = (id, email)=>{
         try{
             const query = `
             INSERT INTO MasterEmail(
-                EmailId,
-                Email_Address,
-                Status,
+                email_id,
+                email_address,
+                status,
                 date
             )VALUES(
                 '${id}',
@@ -91,7 +91,7 @@ const insertVoucherData = (voucherData) =>{
     });
 }
 
-const insertFileNameData = (fileData) =>{
+const insertFileNameData = (file_name,email_id) =>{
     return new Promise(async(resolve, reject)=>{
         try{
             const query = `
@@ -99,8 +99,8 @@ const insertFileNameData = (fileData) =>{
                 file_name,
                 email_id
             )VALUES(
-                '${fileData.file_name}',
-                '${fileData.email_id}'
+                '${file_name}',
+                '${email_id}'
             )
             `
 
@@ -124,8 +124,41 @@ const insertFileNameData = (fileData) =>{
     });
 }
 
+const getFileNameData = (email_id) =>{
+    return new Promise(async(resolve, reject)=>{
+        try{
+            const query = `
+            SELECT file_name FROM MasterFile WHERE email_id = '${email_id}'
+            `
+
+            const mysql = await mysqlConfig();
+            mysql.connect((err) =>{
+                if(err){
+                    reject(`getFileNameData query\n${err}`);
+                }else{
+                    mysql.query(query, (err, results, fields)=>{
+                        if(err){
+                            console.log('fill'+ fields);
+                            reject(`getFileNameData query\n${err}\n${query}`);
+                        }else{
+                            if(results.length>0){
+                                resolve(results)
+                            }else{
+                                resolve(false);
+                            }
+                        }
+                    });
+                }
+            });
+        }catch(err){
+            reject(`getFileNameData${err}`);
+        }
+    })
+}
+
 module.exports = {
     insertVoucherData,
     insertEmailData,
-    insertFileNameData
+    insertFileNameData,
+    getFileNameData
 }

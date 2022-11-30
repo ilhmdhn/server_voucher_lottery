@@ -3,6 +3,7 @@ const {generateVoucherCode, generateEmailId} = require('../util/code');
 const response = require('../util/response');
 const logger = require('../util/logger');
 const generatePdf = require('../util/pdfkit');
+const sendEmailVoucher = require('../util/email');
 
 const postVoucher = async(req, res) =>{
     try{
@@ -39,6 +40,8 @@ const postVoucher = async(req, res) =>{
             await generatePdf(voucher_code, email_id);
             guestChargeTemp = guestChargeTemp - 100000;
         }while(guestChargeTemp >= 100000)
+
+        await sendEmailVoucher(email_id);
         res.send(response(true, null, 'Success Add Voucher'));
 
     }catch(err){
