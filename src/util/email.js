@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 require('dotenv').config();
-const {getFileNameData} = require('../model/voucher-data');
+const {getFileNameData, updateEmailedMasterVoucher, updateEmailedMasterEmail} = require('../model/voucher-data');
 const fs = require('fs');
 
 const sendEmailVoucher = (emailId) =>{
@@ -24,23 +24,22 @@ const sendEmailVoucher = (emailId) =>{
             });
 
             const pdfFile = await getFileNameData(emailId);
-            console.log('attachmen '+ JSON.stringify(pdfFile));
 
             const attachments = pdfFile.map((file)=>{
                 return { filename: file.file_name, content: fs.createReadStream(__dirname+'../../../storage/voucherpdf/'+file.file_name)};
               });
 
-              console.log('attach '+JSON.stringify(attachments))
-
             const info = await transporter.sendMail({
-                from: `Voucher Received <${process.env.EMAIL_SENDER}>`,
+                from: `Voucher Received<${process.env.EMAIL_SENDER}>`,
                 to: 'doha39anilham@gmail.com',
                 bcc: 'ilham.dohaan@happypuppy.id',
-                subject: 'VOUCHER Happy Puppy',
-                text: 'Terima kasih telah mengunjungi happy puppy karaoke keluarga,\nKamu berhak mendapatkan voucher',
+                subject: 'VOUCHER Happy Puppy (TEST)',
+                text: '(TEST)\nTerima kasih telah mengunjungi happy puppy ,\nKamu berhak mendapatkan voucher',
                 attachments: attachments
             });
-            console.log("Message sent: %s", JSON.stringify(info));
+            
+            updateEmailedMasterVoucher(emailId)
+            updateEmailedMasterEmail(emailId)
             resolve(true);
         }catch(err){
             reject(`sendEmailVoucher ${err}`);

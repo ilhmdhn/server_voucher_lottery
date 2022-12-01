@@ -72,7 +72,7 @@ const getTotalEmailToday = (date) =>{
             const mysql = await mysqlConfig();
             mysql.connect((err)=>{
                 if(err){
-
+                    reject(`Can't connect to databases ${err}`)
                 }else{
                     mysql.query(query, (err, result) =>{
                         if(err){

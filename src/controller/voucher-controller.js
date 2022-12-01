@@ -1,4 +1,4 @@
-const {insertVoucherData, insertEmailData} = require('../model/voucher-data');
+const {insertVoucherData, insertEmailData, checkInvoiceIsGenerated} = require('../model/voucher-data');
 const {generateVoucherCode, generateEmailId} = require('../util/code');
 const response = require('../util/response');
 const logger = require('../util/logger');
@@ -18,6 +18,11 @@ const postVoucher = async(req, res) =>{
         const guest_charge = req.body.guest_charge;
         const transaction_date = req.body.transaction_date;
         
+        if(!await checkInvoiceIsGenerated(outlet_code,invoice_code)){
+            res.send(response(false, null, 'Voucher Sudah Dikirim'));
+            return
+        }
+
         const email_id = await generateEmailId();
         await insertEmailData(email_id,guest_email)
         

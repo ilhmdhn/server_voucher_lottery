@@ -1,3 +1,4 @@
+const { response } = require('express');
 const {mysqlConfig} = require('../util/database-tool');
 const logger = require('../util/logger');
 
@@ -134,11 +135,10 @@ const getFileNameData = (email_id) =>{
             const mysql = await mysqlConfig();
             mysql.connect((err) =>{
                 if(err){
-                    reject(`getFileNameData query\n${err}`);
+                    reject(`Can't connect to database\n${err}`);
                 }else{
                     mysql.query(query, (err, results, fields)=>{
                         if(err){
-                            console.log('fill'+ fields);
                             reject(`getFileNameData query\n${err}\n${query}`);
                         }else{
                             if(results.length>0){
@@ -156,9 +156,91 @@ const getFileNameData = (email_id) =>{
     })
 }
 
+const updateEmailedMasterVoucher = async(email_id) =>{
+    try{
+        const query = `
+            UPDATE MasterEmail SET status = '1' WHERE email_id = '${email_id}'
+        `
+        const mysql = await mysqlConfig();
+        mysql.connect((err)=>{
+            if(err){
+                throw `Can't connect to database\n${err}`
+            }else{
+                mysql.query(query, (err, results, fields)=>{
+                    if(err){
+                        throw `updateEmailedMasterVoucher query\n${err}\n${query}`
+                    }else{
+                        logger.info(`SUCCESS updateEmailedMasterVoucher ${email_id}`)
+                    }
+                });
+            }
+        })
+    }catch(err){
+        logger.error(err);
+    }
+}
+
+const updateEmailedMasterEmail = async(email_id) =>{
+    try{
+        const query = `
+            UPDATE MasterVoucher SET status = '1' WHERE email_id = '${email_id}'
+        `
+        const mysql = await mysqlConfig();
+        mysql.connect((err)=>{
+            if(err){
+                throw `Can't connect to database\n${err}`
+            }else{
+                mysql.query(query, (err, results, fields)=>{
+                    if(err){
+                        throw `getFileNameData query\n${err}\n${query}`
+                    }else{
+                        logger.info(`SUCCESS updateEmailedMasterEmail ${email_id}`)
+                    }
+                });
+            }
+        })
+
+    }catch(err){
+        logger.error(err);
+    }
+}
+
+const checkInvoiceIsGenerated = (outlet_code, invoice) =>{
+    return new Promise(async(resolve, reject)=>{
+        try{
+            const query = `
+                SELECT COUNT(*) as total FROM MasterVoucher WHERE outlet_code = '${outlet_code}' AND invoice_code = '${invoice}' AND status = '1'
+            `
+            const mysql = await mysqlConfig();
+            mysql.connect((err)=>{
+                if(err){
+                    reject(`Can't connect to database\n${err}`);
+                }else{
+                    mysql.query(query, (err, results) =>{
+                        if(err){
+                            reject(`checkInvoiceIsGenerated query\n${err}\n${query}`);
+                        }else{
+                            if(results[0].total>0){
+                                resolve(false)
+                            }else{
+                                resolve(true)
+                            }
+                        }
+                    })
+                }
+            })
+        }catch(err){
+            reject(`checkInvoiceIsGenerated \n${err}`);
+        }
+    });
+}
+
 module.exports = {
     insertVoucherData,
     insertEmailData,
     insertFileNameData,
-    getFileNameData
+    getFileNameData,
+    updateEmailedMasterVoucher,
+    updateEmailedMasterEmail,
+    checkInvoiceIsGenerated
 }
