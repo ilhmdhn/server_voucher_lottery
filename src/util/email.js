@@ -37,7 +37,7 @@ const sendEmailVoucher = (emailId) =>{
             const info = await transporter.sendMail({
                 from: `Voucher Received<${process.env.EMAIL_SENDER}>`,
                 to: emailReceiver.email,
-                bcc: emailReceiver.email_bcc,
+                bcc: emailReceiver.bcc,
                 subject: 'VOUCHER Happy Puppy (TEST)',
                 text: '(TEST)\nTerima kasih telah mengunjungi happy puppy ,\nKamu berhak mendapatkan voucher',
                 attachments: attachments
