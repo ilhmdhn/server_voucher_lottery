@@ -1,19 +1,24 @@
 const nodemailer = require("nodemailer");
 require('dotenv').config();
-const {getFileNameData, updateEmailedMasterVoucher, updateEmailedMasterEmail} = require('../model/voucher-data');
+const {getFileNameData, updateEmailedMasterVoucher, updateEmailedMasterEmail, getEmailAddress} = require('../model/voucher-data');
 const fs = require('fs');
 
 const sendEmailVoucher = (emailId) =>{
     return new Promise(async(resolve, reject) =>{
         try{
-
+            
+            const emailHost = process.env.EMAIL_HOST;
+            const emaiSender = process.env.EMAIL_SENDER;
+            const emailPassword = process.env.EMAIL_PASS;
+            const emailReceiver = await getEmailAddress(emailId);
+            console.log('emailnyaa ',JSON.stringify(emailReceiver))
             const transporter = nodemailer.createTransport({
-                host: process.env.EMAIL_HOST,
+                host: emailHost,
                 port: 587,
                 secure: false,
                 auth: {
-                    user: process.env.EMAIL_SENDER,
-                    pass: process.env.EMAIL_PASS,
+                    user: emaiSender,
+                    pass: emailPassword,
                 },
                 tls: {
                     rejectUnauthorized: false
@@ -31,8 +36,8 @@ const sendEmailVoucher = (emailId) =>{
 
             const info = await transporter.sendMail({
                 from: `Voucher Received<${process.env.EMAIL_SENDER}>`,
-                to: 'doha39anilham@gmail.com',
-                bcc: 'ilham.dohaan@happypuppy.id',
+                to: emailReceiver.email,
+                bcc: emailReceiver.email_bcc,
                 subject: 'VOUCHER Happy Puppy (TEST)',
                 text: '(TEST)\nTerima kasih telah mengunjungi happy puppy ,\nKamu berhak mendapatkan voucher',
                 attachments: attachments

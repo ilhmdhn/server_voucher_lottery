@@ -1,19 +1,20 @@
-const { response } = require('express');
 const {mysqlConfig} = require('../util/database-tool');
 const logger = require('../util/logger');
 
-const insertEmailData = (id, email)=>{
+const insertEmailData = (id, email, bccEmail)=>{
     return new Promise(async(resolve, reject)=>{
         try{
             const query = `
             INSERT INTO MasterEmail(
                 email_id,
                 email_address,
+                email_bcc,
                 status,
                 date
             )VALUES(
                 '${id}',
                 '${email}',
+                '${bccEmail}',
                 '0',
                 CURDATE()
             )
@@ -21,7 +22,7 @@ const insertEmailData = (id, email)=>{
         const mysql = await mysqlConfig();
         mysql.connect((err)=>{
             if(err){
-                reject.error(`Can\'t connect to database ${err}`);
+                reject(`Can't connect to database ${err}`);
             }else{
                 mysql.query(query, (err, results)=>{
                     if(err){
@@ -235,6 +236,37 @@ const checkInvoiceIsGenerated = (outlet_code, invoice) =>{
     });
 }
 
+const getEmailAddress = (emailId) =>{
+    return new Promise(async(resolve, reject)=>{
+        try{
+            const query = `
+                SELECT email_address as email, email_bcc as bcc FROM MasterEmail WHERE email_id = '${emailId}'
+            `
+            const mysql = await mysqlConfig();
+            mysql.connect((err)=>{
+                if(err){
+                    reject(`Can't connect to database\n${err}`);
+                }else{
+                    mysql.query(query, (err, results) =>{
+                        if(err){
+                            reject(`getEmailAddress query\n${err}\n${query}`);
+                        }else{
+                            console.log('hasil query email ',JSON.stringify(results))
+                            if(results.length>0){
+                                resolve(results[0])
+                            }else{
+                                resolve(false)
+                            }
+                        }
+                    })
+                }
+            })
+        }catch(err){
+            reject(`getEmailAddress ${err}`)
+        }
+    })
+}
+
 module.exports = {
     insertVoucherData,
     insertEmailData,
@@ -242,5 +274,6 @@ module.exports = {
     getFileNameData,
     updateEmailedMasterVoucher,
     updateEmailedMasterEmail,
-    checkInvoiceIsGenerated
+    checkInvoiceIsGenerated,
+    getEmailAddress
 }

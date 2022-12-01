@@ -14,6 +14,7 @@ const postVoucher = async(req, res) =>{
         const guest_instagram = req.body.guest_instagram;
         const guest_phone = req.body.guest_phone;
         const guest_email = req.body.guest_email;
+        const bcc_email = req.body.bcc_email;
         const guest_ktp = req.body.guest_ktp;
         const guest_charge = req.body.guest_charge;
         const transaction_date = req.body.transaction_date;
@@ -24,7 +25,7 @@ const postVoucher = async(req, res) =>{
         }
 
         const email_id = await generateEmailId();
-        await insertEmailData(email_id,guest_email)
+        await insertEmailData(email_id,guest_email, bcc_email)
         
         let guestChargeTemp = guest_charge;
         do{
