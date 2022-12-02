@@ -33,8 +33,8 @@ const databaseTest = () =>{
                 }else{
                     resolve(true);
                 }
+                mysql.end();
             });
-            mysql.end();
         }catch(err){
             resolve('error '+err)
         }

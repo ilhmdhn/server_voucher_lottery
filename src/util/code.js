@@ -35,7 +35,7 @@ const getTotalVoucherToday = (voucher) =>{
                         }else{
                             resolve(results[0].total);
                         }
-                    mysql.end();
+                        mysql.end();
                     });
                 }
             });
@@ -80,6 +80,7 @@ const getTotalEmailToday = (date) =>{
                         }else{
                             resolve(result[0].total)
                         }
+                        mysql.end();
                     });
                 }
             });

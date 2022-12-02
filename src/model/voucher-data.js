@@ -30,6 +30,7 @@ const insertEmailData = (id, email, bccEmail)=>{
                     }else{
                         resolve(true);
                     }
+                    mysql.end();
                 });
             }
         });
@@ -117,9 +118,10 @@ const insertFileNameData = (file_name,email_id) =>{
                         }else{
                             resolve(true)
                         }
-                    })
+                        mysql.end();
+                    });
                 }
-            })
+            });
         }catch(err){
             reject(`insertFileNameData ${err}`)
         }
@@ -148,6 +150,7 @@ const getFileNameData = (email_id) =>{
                                 resolve(false);
                             }
                         }
+                        mysql.end();
                     });
                 }
             });
@@ -173,9 +176,10 @@ const updateEmailedMasterVoucher = async(email_id) =>{
                     }else{
                         logger.info(`SUCCESS updateEmailedMasterVoucher ${email_id}`)
                     }
+                    mysql.end();
                 });
             }
-        })
+        });
     }catch(err){
         logger.error(err);
     }
@@ -197,10 +201,10 @@ const updateEmailedMasterEmail = async(email_id) =>{
                     }else{
                         logger.info(`SUCCESS updateEmailedMasterEmail ${email_id}`)
                     }
+                    mysql.end();
                 });
             }
-        })
-
+        });
     }catch(err){
         logger.error(err);
     }
@@ -227,9 +231,10 @@ const checkInvoiceIsGenerated = (outlet_code, invoice) =>{
                                 resolve(true)
                             }
                         }
-                    })
+                        mysql.end();
+                    });
                 }
-            })
+            });
         }catch(err){
             reject(`checkInvoiceIsGenerated \n${err}`);
         }
@@ -258,9 +263,10 @@ const getEmailAddress = (emailId) =>{
                                 resolve(false)
                             }
                         }
-                    })
+                        mysql.end();
+                    });
                 }
-            })
+            });
         }catch(err){
             reject(`getEmailAddress ${err}`)
         }
