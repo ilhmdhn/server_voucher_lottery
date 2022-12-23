@@ -52,12 +52,14 @@ const sendEmailVoucher = (emailId) =>{
                 `,
                 attachments: attachments
             });
-            updateEmailedMasterVoucher(emailId)
-            updateEmailedMasterEmail(emailId)
+            updateEmailedMasterVoucher(emailId, 1)
+            updateEmailedMasterEmail(emailId, 1)
             resolve(true);
             logger.info(`SEND EMAIL\n${info}`);
         }catch(err){
-            reject(`sendEmailVoucher ${err}`);
+            updateEmailedMasterVoucher(emailId, 2)
+            updateEmailedMasterEmail(emailId, 2)
+            resolve(err);
         }
     });
 }

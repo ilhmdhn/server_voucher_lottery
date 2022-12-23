@@ -1,4 +1,4 @@
-const {insertVoucherData, insertEmailData, checkInvoiceIsGenerated} = require('../model/voucher-data');
+const {insertVoucherData, insertEmailData, checkInvoiceIsGenerated, voucherHistory} = require('../model/voucher-data');
 const {generateVoucherCode, generateEmailId} = require('../util/code');
 const response = require('../util/response');
 const logger = require('../util/logger');
@@ -46,8 +46,10 @@ const postVoucher = async(req, res) =>{
             await generatePdf(voucher_code, email_id);
             guestChargeTemp = guestChargeTemp - 100000;
         }while(guestChargeTemp >= 100000)
-
-        await sendEmailVoucher(email_id);
+        const emailed = await sendEmailVoucher(email_id)
+        if(emailed != true){
+            throw emailed;
+        }
         res.send(response(true, null, 'Success Add Voucher'));
 
     }catch(err){
@@ -107,7 +109,23 @@ const postMassVoucher = async(req, res)=>{
     }
 }
 
+const getVoucherHistory = async(req, res)=>{
+    try{
+        const page = req.query.page;
+        const size = req.query.size;
+        const outlet = req.query.outlet_code;
+
+        const historyData = await voucherHistory(page, size, outlet)
+
+        res.send(historyData);
+    }catch(err){
+        logger.error(`getVoucherHistory\n${err}`);
+        res.send(response(false, null, 'error'));
+    }
+}
+
 module.exports = {
     postVoucher,
-    postMassVoucher
+    postMassVoucher,
+    getVoucherHistory
 }

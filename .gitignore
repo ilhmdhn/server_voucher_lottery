@@ -5,5 +5,9 @@
 /log_error-2022-11.log
 /node_modules
 /package-lock.json
+./storage
+/storage
+storage
 *.pdf
 *.log
+storage/voucherpdf/11221052800001.pdf
