@@ -1,22 +1,24 @@
 const {mysqlConfig} = require('../util/database-tool');
 const logger = require('../util/logger');
 
-const insertEmailData = (id, email, bccEmail)=>{
+const insertEmailData = (id, email, outletCode, invoice)=>{
     return new Promise(async(resolve, reject)=>{
         try{
             const query = `
             INSERT INTO MasterEmail(
                 email_id,
                 email_address,
-                email_bcc,
+                outlet_code,
                 status,
-                date
+                date,
+                invoice
             )VALUES(
                 '${id}',
                 '${email}',
-                '${bccEmail}',
+                '${outletCode}',
                 '0',
-                CURDATE()
+                CURDATE(),
+                '${invoice}'
             )
             `
         const mysql = await mysqlConfig();
@@ -245,7 +247,7 @@ const getEmailAddress = (emailId) =>{
     return new Promise(async(resolve, reject)=>{
         try{
             const query = `
-                SELECT email_address as email, email_bcc as bcc FROM MasterEmail WHERE email_id = '${emailId}'
+                SELECT email_address as email, outlet_code as kode_outlet FROM MasterEmail WHERE email_id = '${emailId}'
             `
             const mysql = await mysqlConfig();
             mysql.connect((err)=>{

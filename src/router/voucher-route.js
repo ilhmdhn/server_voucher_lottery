@@ -1,7 +1,8 @@
 const express = require("express");
-const {postVoucher} = require('../controller/voucher-controller');
+const {postVoucher, postMassVoucher} = require('../controller/voucher-controller');
 const voucherRoute = express.Router();
 
 voucherRoute.post('/voucher', postVoucher);
+voucherRoute.post('/voucher-mass', postMassVoucher);
 
 module.exports = voucherRoute;

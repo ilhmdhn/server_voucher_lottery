@@ -2,6 +2,7 @@ const nodemailer = require("nodemailer");
 require('dotenv').config();
 const {getFileNameData, updateEmailedMasterVoucher, updateEmailedMasterEmail, getEmailAddress} = require('../model/voucher-data');
 const fs = require('fs');
+const logger = require("./logger");
 
 const sendEmailVoucher = (emailId) =>{
     return new Promise(async(resolve, reject) =>{
@@ -11,6 +12,8 @@ const sendEmailVoucher = (emailId) =>{
             const emaiSender = process.env.EMAIL_SENDER;
             const emailPassword = process.env.EMAIL_PASS;
             const emailReceiver = await getEmailAddress(emailId);
+            const kode_outlet = emailReceiver.kode_outlet;
+            const bccOutlet = [`${kode_outlet}.spv@happypuppy.id`, `${kode_outlet}.spv@happypuppy.id`, `${kode_outlet}@happypuppy.id`, `${kode_outlet}.akt@happypuppy.id`, `${kode_outlet}.fnc@happypuppy.id`, `${kode_outlet}.adm@happypuppy.id`];
             console.log('emailnyaa ',JSON.stringify(emailReceiver))
             const transporter = nodemailer.createTransport({
                 host: emailHost,
@@ -27,7 +30,7 @@ const sendEmailVoucher = (emailId) =>{
                   debug: false,
                   secure: false, 
             });
-
+            console.log('bcc outlet', bccOutlet)
             const pdfFile = await getFileNameData(emailId);
 
             const attachments = pdfFile.map((file)=>{
@@ -35,17 +38,24 @@ const sendEmailVoucher = (emailId) =>{
               });
 
             const info = await transporter.sendMail({
-                from: `Voucher Received<${process.env.EMAIL_SENDER}>`,
+                from: `Happy Puppy Group<${process.env.EMAIL_SENDER}>`,
                 to: emailReceiver.email,
-                bcc: emailReceiver.bcc,
-                subject: 'VOUCHER Happy Puppy (TEST)',
-                text: '(TEST)\nTerima kasih telah mengunjungi happy puppy ,\nKamu berhak mendapatkan voucher',
+                bcc: ['ilham.dohaan@happypuppy.id'],
+                subject: 'Voucher Undian “OMO! Happup K-Fest”',
+                html: `<p>Terima Kasih telah bernyanyi dan berpartisipasi pada "OMO! Happup K-Fest".</p>
+                <p>E-voucher dapat diunduh pada lampiran ini.</p>
+                <p>Pengundian dilakukan oleh tim Happy Puppy Official melalui Live IG <a href="https://www.instagram.com/happypuppykaraoke/">@happypuppykaraoke</a> dan akan
+                diumumkan pada 03 Februari 2023, 03 Maret 2023 dan 08 April 2023.<p>
+                <p>Terima kasih.</p>
+
+                <p>Salam Happy People,<br>Happy Puppy Group</p>
+                `,
                 attachments: attachments
             });
-            
             updateEmailedMasterVoucher(emailId)
             updateEmailedMasterEmail(emailId)
             resolve(true);
+            logger.info(`SEND EMAIL\n${info}`);
         }catch(err){
             reject(`sendEmailVoucher ${err}`);
         }
