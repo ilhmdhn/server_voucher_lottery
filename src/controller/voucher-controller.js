@@ -32,7 +32,7 @@ const postVoucher = async(req, res) =>{
             const voucher_code = await generateVoucherCode(voucher_code_temp)
             const voucherData = {
                 voucherCode: voucher_code,
-                outletCode: outlet_code,
+                outletCode: full_outlet_code,
                 invoiceCode: invoice_code,
                 guestName: guest_name,
                 guestInstagram: guest_instagram,
@@ -74,7 +74,7 @@ const postMassVoucher = async(req, res)=>{
             const guest_charge = voucherData[i].guest_charge;
             const transaction_date = voucherData[i].transaction_date;
 
-            if(!await checkInvoiceIsGenerated(outlet_code,invoice_code)){
+            if(!await checkInvoiceIsGenerated(full_outlet_code,invoice_code)){
                 continue;
             }
             const email_id = await generateEmailId();
@@ -85,7 +85,7 @@ const postMassVoucher = async(req, res)=>{
                 const voucher_code = await generateVoucherCode(voucher_code_temp)
                 const voucherData = {
                     voucherCode: voucher_code,
-                    outletCode: outlet_code,
+                    outletCode: full_outlet_code,
                     invoiceCode: invoice_code,
                     guestName: guest_name,
                     guestInstagram: guest_instagram,
