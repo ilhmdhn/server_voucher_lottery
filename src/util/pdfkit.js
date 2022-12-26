@@ -1,14 +1,13 @@
-const PDFDocument = require('pdfkit');
-const fs = require('fs');
 const { insertFileNameData } = require('../model/voucher-data');
+const muhammara = require('muhammara');
 
 const generatePdf = (voucherCode, emailId) => {
     return new Promise(async (resolve, reject) => {
         try {
 
             const pdfFile = muhammara.createWriterToModify(
-                __dirname + '../assets/designVoucher.pdf', {
-                modifiedFilePath: __dirname + "../../../storage/voucherpdf/${voucherCode}.pdf",
+                __dirname + '/designVoucher.pdf', {
+                modifiedFilePath: __dirname + `../../../storage/voucherpdf/${voucherCode}.pdf`,
             }
             );
 

@@ -13,8 +13,13 @@ const sendEmailVoucher = (emailId) =>{
             const emailPassword = process.env.EMAIL_PASS;
             const emailReceiver = await getEmailAddress(emailId);
             const kode_outlet = emailReceiver.kode_outlet;
-            const bccOutlet = [`${kode_outlet}.spv@happypuppy.id`, `${kode_outlet}.spv@happypuppy.id`, `${kode_outlet}@happypuppy.id`, `${kode_outlet}.akt@happypuppy.id`, `${kode_outlet}.fnc@happypuppy.id`, `${kode_outlet}.adm@happypuppy.id`];
-            console.log('emailnyaa ',JSON.stringify(emailReceiver))
+            const bccOutlet = [`${kode_outlet}.spv@happypuppy.id`, 
+                                `${kode_outlet}.koo@happypuppy.id`, 
+                                `${kode_outlet}.akt@happypuppy.id`, 
+                                `${kode_outlet}.adm@happypuppy.id`,
+                                `${kode_outlet}.fnc@happypuppy.id`,
+                                `${kode_outlet}.ite@happypuppy.id`,
+                                `${kode_outlet}@happypuppy.id`]; 
             const transporter = nodemailer.createTransport({
                 host: emailHost,
                 port: 587,
