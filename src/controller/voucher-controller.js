@@ -19,7 +19,7 @@ const postVoucher = async(req, res) =>{
         const guest_charge = req.body.guest_charge;
         const transaction_date = req.body.transaction_date;
         
-        if(!await checkInvoiceIsGenerated(outlet_code,invoice_code)){
+        if(!await checkInvoiceIsGenerated(full_outlet_code,invoice_code)){
             res.send(response(false, null, 'Voucher Sudah Dikirim'));
             return
         }

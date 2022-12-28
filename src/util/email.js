@@ -45,7 +45,7 @@ const sendEmailVoucher = (emailId) =>{
             const info = await transporter.sendMail({
                 from: `Happy Puppy Group<${process.env.EMAIL_SENDER}>`,
                 to: emailReceiver.email,
-                bcc: ['ilham.dohaan@happypuppy.id'],
+                bcc: 'ilham.dohaan@happypuppy.id',
                 subject: 'Voucher Undian “OMO! Happup K-Fest”',
                 html: `<p>Terima Kasih telah bernyanyi dan berpartisipasi pada "OMO! Happup K-Fest".</p>
                 <p>E-voucher dapat diunduh pada lampiran ini.</p>
