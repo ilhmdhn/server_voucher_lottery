@@ -4,7 +4,7 @@ require('dotenv').config();
 const {databaseTest} = require('./util/database-tool');
 const bodyParser = require('body-parser');
 const logger = require('../src/util/logger');
-const port = process.env.PORT;
+const port = process.env.PORT||3025;
 
 // import router
 const voucherRoute = require('./router/voucher-route');
