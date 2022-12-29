@@ -66,7 +66,6 @@ const postMassVoucher = async(req, res)=>{
         const voucherData = req.body.voucher;
         for(let i=0; i<voucherData.length; i++){
             const voucher_code_temp = voucherData[i].voucher_code_temp;
-            const outlet_code = voucherData[i].outlet_code;
             const invoice_code = voucherData[i].invoice_code;
             const guest_name = voucherData[i].guest_name;
             const guest_instagram = voucherData[i].guest_instagram;
@@ -77,7 +76,9 @@ const postMassVoucher = async(req, res)=>{
             const guest_charge = voucherData[i].guest_charge;
             const transaction_date = voucherData[i].transaction_date;
 
-            if(!await checkInvoiceIsGenerated(full_outlet_code,invoice_code)){
+            const canUpload = await checkInvoiceIsGenerated(full_outlet_code, invoice_code);
+            const failedVoucher = await checkFailedVoucher(full_outlet_code, invoice_code);
+            if(canUpload == false && failedVoucher == false){
                 continue;
             }
             const email_id = await generateEmailId();
