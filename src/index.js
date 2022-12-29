@@ -5,6 +5,7 @@ const {databaseTest} = require('./util/database-tool');
 const bodyParser = require('body-parser');
 const logger = require('../src/util/logger');
 const port = process.env.PORT||3025;
+const {createStoregeDir} = require('./util/create-dir');
 
 // import router
 const voucherRoute = require('./router/voucher-route');
@@ -32,6 +33,7 @@ const loggerRequest = (req, res, next) =>{
 
 app.listen(port, async()=>{
     logger.info(`App Running on ${process.env.PORT} port`);
+    await createStoregeDir();
 })
 
 app.get('/', async (req, res)=>{

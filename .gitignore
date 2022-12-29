@@ -8,6 +8,5 @@
 ./storage
 /storage
 storage
-*.pdf
 *.log
 storage/voucherpdf/11221052800001.pdf
