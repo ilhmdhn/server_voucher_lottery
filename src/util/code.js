@@ -20,7 +20,7 @@ const getTotalVoucherToday = (voucher) =>{
         try{
 
             const query = `
-            SELECT count(*) as total FROM MasterVoucher WHERE voucher_code LIKE '${voucher}%'
+            SELECT count(*) as total FROM master_voucher WHERE voucher_code LIKE '${voucher}%'
             `
             const mysql = await mysqlConfig();
             mysql.connect((err)=>{
@@ -66,7 +66,7 @@ const getTotalEmailToday = (date) =>{
         try{
 
             const query = `
-            SELECT count(*) as total FROM MasterEmail WHERE email_id LIKE '${date}%'
+            SELECT count(*) as total FROM master_email WHERE email_id LIKE '${date}%'
             `
 
             const mysql = await mysqlConfig();

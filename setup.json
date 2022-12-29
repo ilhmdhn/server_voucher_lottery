@@ -1,0 +1,9 @@
+{      
+    "server_port_membership":3000,
+    "db_user":"ihp",
+    "db_password":"1mp3r1umH4pup",
+    "db_server_ip_membership":"23.97.57.92",
+    "db_server_port_membership":3306,
+    "db_name":"ihp_membership",
+    "db_connectionLimit":3
+ }

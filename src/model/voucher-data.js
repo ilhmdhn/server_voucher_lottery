@@ -7,7 +7,7 @@ const insertEmailData = (id, email, outletCode, invoice) => {
     return new Promise(async (resolve, reject) => {
         try {
             const query = `
-            INSERT INTO MasterEmail(
+            INSERT INTO master_email(
                 email_id,
                 email_address,
                 outlet_code,
@@ -48,7 +48,7 @@ const insertVoucherData = (voucherData) => {
     return new Promise(async (resolve, reject) => {
         try {
             const query = `
-            INSERT INTO MasterVoucher(
+            INSERT INTO master_voucher(
                     voucher_code,
                     outlet_code,
                     invoice_code,
@@ -102,7 +102,7 @@ const insertFileNameData = (file_name, email_id) => {
     return new Promise(async (resolve, reject) => {
         try {
             const query = `
-            INSERT INTO MasterFile(
+            INSERT INTO master_file(
                 file_name,
                 email_id
             )VALUES(
@@ -136,7 +136,7 @@ const getFileNameData = (email_id) => {
     return new Promise(async (resolve, reject) => {
         try {
             const query = `
-            SELECT file_name FROM MasterFile WHERE email_id = '${email_id}'
+            SELECT file_name FROM master_file WHERE email_id = '${email_id}'
             `
 
             const mysql = await mysqlConfig();
@@ -167,7 +167,7 @@ const getFileNameData = (email_id) => {
 const updateEmailedMasterVoucher = async (email_id, state) => {
     try {
         const query = `
-            UPDATE MasterEmail SET status = '${state}' WHERE email_id = '${email_id}'
+            UPDATE master_email SET status = '${state}' WHERE email_id = '${email_id}'
         `
         const mysql = await mysqlConfig();
         mysql.connect((err) => {
@@ -189,10 +189,10 @@ const updateEmailedMasterVoucher = async (email_id, state) => {
     }
 }
 
-const updateEmailedMasterEmail = async (email_id, state) => {
+const updateEmailedmaster_email = async (email_id, state) => {
     try {
         const query = `
-            UPDATE MasterVoucher SET status = '${state}' WHERE email_id = '${email_id}'
+            UPDATE master_voucher SET status = '${state}' WHERE email_id = '${email_id}'
         `
         const mysql = await mysqlConfig();
         mysql.connect((err) => {
@@ -203,7 +203,7 @@ const updateEmailedMasterEmail = async (email_id, state) => {
                     if (err) {
                         throw `getFileNameData query\n${err}\n${query}`
                     } else {
-                        logger.info(`SUCCESS updateEmailedMasterEmail ${email_id}`)
+                        logger.info(`SUCCESS updateEmailedmaster_email ${email_id}`)
                     }
                     mysql.end();
                 });
@@ -218,7 +218,7 @@ const checkInvoiceIsGenerated = (outlet_code, invoice) => {
     return new Promise(async (resolve, reject) => {
         try {
             const query = `
-                SELECT COUNT(*) as total FROM MasterVoucher WHERE outlet_code = '${outlet_code}' AND invoice_code = '${invoice}'
+                SELECT COUNT(*) as total FROM master_voucher WHERE outlet_code = '${outlet_code}' AND invoice_code = '${invoice}'
             `
             const mysql = await mysqlConfig();
             mysql.connect((err) => {
@@ -249,7 +249,7 @@ const getEmailAddress = (emailId) => {
     return new Promise(async (resolve, reject) => {
         try {
             const query = `
-                SELECT email_address as email, outlet_code as kode_outlet FROM MasterEmail WHERE email_id = '${emailId}'
+                SELECT email_address as email, outlet_code as kode_outlet FROM master_email WHERE email_id = '${emailId}'
             `
             const mysql = await mysqlConfig();
             mysql.connect((err) => {
@@ -281,7 +281,7 @@ const voucherHistory = (page, size, outlet) => {
     return new Promise(async(resolve, reject) => {
         try {
             const query = `
-            SELECT * FROM masteremail WHERE outlet_code = '${outlet}' ORDER BY date DESC LIMIT ${size} OFFSET ${(page-1)*size}`
+            SELECT * FROM master_email WHERE outlet_code = '${outlet}' ORDER BY date DESC LIMIT ${size} OFFSET ${(page-1)*size}`
             const mysql = await mysqlConfig();
             mysql.connect((err) => {
                 if (err) {
@@ -314,7 +314,7 @@ module.exports = {
     insertFileNameData,
     getFileNameData,
     updateEmailedMasterVoucher,
-    updateEmailedMasterEmail,
+    updateEmailedmaster_email,
     checkInvoiceIsGenerated,
     getEmailAddress,
     voucherHistory
