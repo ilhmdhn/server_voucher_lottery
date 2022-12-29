@@ -248,7 +248,7 @@ const checkInvoiceIsGenerated = (outlet_code, invoice) => {
 const checkFailedVoucher = (outlet_code, invoice)=>{
     return new Promise(async(resolve)=>{
         try{
-            `SELECT COUNT(*) as total FROM master_voucher WHERE outlet_code = '${outlet_code}' AND invoice_code = '${invoice}' and status = '2' `
+            const query = `SELECT COUNT(*) as total FROM master_voucher WHERE outlet_code = '${outlet_code}' AND invoice_code = '${invoice}' and status = '2' `
 
             const mysql = await mysqlConfig();
             mysql.connect((err) => {
