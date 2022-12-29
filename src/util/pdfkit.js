@@ -8,7 +8,7 @@ const generatePdf = (voucherCode, emailId) => {
 
             const pdfFile = muhammara.createWriterToModify(
                 __dirname + '/designVoucher.pdf', {
-                modifiedFilePath: __dirname + `../../storage/voucherpdf/${voucherCode}.pdf`,
+                modifiedFilePath: __dirname + `../../../storage/voucherpdf/${voucherCode}.pdf`,
             }
             );
 

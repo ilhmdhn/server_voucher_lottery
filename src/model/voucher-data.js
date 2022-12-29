@@ -189,7 +189,7 @@ const updateEmailedMasterVoucher = async (email_id, state) => {
     }
 }
 
-const updateEmailedmaster_email = async (email_id, state) => {
+const updateEmailedMasterEmail = async (email_id, state) => {
     try {
         const query = `
             UPDATE master_voucher SET status = '${state}' WHERE email_id = '${email_id}'
@@ -203,7 +203,7 @@ const updateEmailedmaster_email = async (email_id, state) => {
                     if (err) {
                         throw `getFileNameData query\n${err}\n${query}`
                     } else {
-                        logger.info(`SUCCESS updateEmailedmaster_email ${email_id}`)
+                        logger.info(`SUCCESS updateEmailedMasterEmail ${email_id}`)
                     }
                     mysql.end();
                 });
@@ -241,6 +241,36 @@ const checkInvoiceIsGenerated = (outlet_code, invoice) => {
             });
         } catch (err) {
             reject(`checkInvoiceIsGenerated \n${err}`);
+        }
+    });
+}
+
+const checkFailedVoucher = (outlet_code, invoice)=>{
+    return new Promise(async(resolve)=>{
+        try{
+            `SELECT COUNT(*) as total FROM master_voucher WHERE outlet_code = '${outlet_code}' AND invoice_code = '${invoice}' and status = '2' `
+
+            const mysql = await mysqlConfig();
+            mysql.connect((err) => {
+                if (err) {
+                    reject(`Can't connect to database\n${err}`);
+                } else {
+                    mysql.query(query, (err, results) => {
+                        if (err) {
+                            reject(`checkFailedVoucher query\n${err}\n${query}`);
+                        } else {
+                            if (results[0].total > 0) {
+                                resolve(true)
+                            } else {
+                                resolve(false)
+                            }
+                        }
+                        mysql.end();
+                    });
+                }
+            });
+        }catch(err){
+            reject(`checkFailedVoucher \n${err}`);
         }
     });
 }
@@ -314,8 +344,9 @@ module.exports = {
     insertFileNameData,
     getFileNameData,
     updateEmailedMasterVoucher,
-    updateEmailedmaster_email,
+    updateEmailedMasterEmail,
     checkInvoiceIsGenerated,
     getEmailAddress,
-    voucherHistory
+    voucherHistory,
+    checkFailedVoucher
 }

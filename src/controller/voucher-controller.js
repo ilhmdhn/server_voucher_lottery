@@ -1,4 +1,4 @@
-const {insertVoucherData, insertEmailData, checkInvoiceIsGenerated, voucherHistory} = require('../model/voucher-data');
+const {insertVoucherData, insertEmailData, checkInvoiceIsGenerated, voucherHistory, checkFailedVoucher} = require('../model/voucher-data');
 const {generateVoucherCode, generateEmailId} = require('../util/code');
 const response = require('../util/response');
 const logger = require('../util/logger');
@@ -19,7 +19,10 @@ const postVoucher = async(req, res) =>{
         const guest_charge = req.body.guest_charge;
         const transaction_date = req.body.transaction_date;
         
-        if(!await checkInvoiceIsGenerated(full_outlet_code,invoice_code)){
+        const canUpload = await checkInvoiceIsGenerated(full_outlet_code, invoice_code);
+        const failedVoucher = await checkFailedVoucher(full_outlet_code, invoice_code);
+
+        if(canUpload == false && failedVoucher == false){
             res.send(response(false, null, 'Voucher Sudah Dikirim'));
             return
         }
