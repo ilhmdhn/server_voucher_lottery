@@ -1,5 +1,6 @@
 const { insertFileNameData } = require('../model/voucher-data');
 const muhammara = require('muhammara');
+const logger = require('./logger');
 
 const generatePdf = (voucherCode, emailId) => {
     return new Promise(async (resolve, reject) => {
@@ -7,7 +8,7 @@ const generatePdf = (voucherCode, emailId) => {
 
             const pdfFile = muhammara.createWriterToModify(
                 __dirname + '/designVoucher.pdf', {
-                modifiedFilePath: __dirname + `../../../storage/voucherpdf/${voucherCode}.pdf`,
+                modifiedFilePath: __dirname + `../../storage/voucherpdf/${voucherCode}.pdf`,
             }
             );
 
@@ -29,7 +30,7 @@ const generatePdf = (voucherCode, emailId) => {
             await insertFileNameData(voucherCode + '.pdf', emailId);
             resolve(true);
         } catch (err) {
-            console.log('failed create pdf');
+            logger.error('failed create pdf');
             reject(`generatePdf\n${err}`);
         }
     });

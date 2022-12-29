@@ -39,7 +39,7 @@ const sendEmailVoucher = (emailId) =>{
             const pdfFile = await getFileNameData(emailId);
 
             const attachments = pdfFile.map((file)=>{
-                return { filename: file.file_name, content: fs.createReadStream(__dirname+'../../../storage/voucherpdf/'+file.file_name)};
+                return { filename: file.file_name, content: fs.createReadStream(__dirname+'../../storage/voucherpdf/'+file.file_name)};
               });
 
             const info = await transporter.sendMail({
