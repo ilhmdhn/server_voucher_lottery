@@ -16,10 +16,11 @@ const sendEmailVoucher = (emailId) =>{
             const bccOutlet = [`${kode_outlet}.spv@happypuppy.id`, 
                                 `${kode_outlet}.koo@happypuppy.id`, 
                                 `${kode_outlet}.akt@happypuppy.id`, 
-                                `${kode_outlet}.adm@happypuppy.id`,
-                                `${kode_outlet}.fnc@happypuppy.id`,
-                                `${kode_outlet}.ite@happypuppy.id`,
-                                `${kode_outlet}@happypuppy.id`]; 
+                                `${kode_outlet}.adm@happypuppy.id`
+                                // ,`${kode_outlet}.fnc@happypuppy.id`,
+                                // `${kode_outlet}.ite@happypuppy.id`,
+                                // `${kode_outlet}@happypuppy.id`
+                            ]; 
             const transporter = nodemailer.createTransport({
                 host: emailHost,
                 port: 587,
@@ -35,7 +36,6 @@ const sendEmailVoucher = (emailId) =>{
                   debug: false,
                   secure: false, 
             });
-            console.log('bcc outlet', bccOutlet)
             const pdfFile = await getFileNameData(emailId);
 
             const attachments = pdfFile.map((file)=>{
@@ -47,8 +47,8 @@ const sendEmailVoucher = (emailId) =>{
             const info = await transporter.sendMail({
                 from: `Happy Puppy Group<${process.env.EMAIL_SENDER}>`,
                 to: emailReceiver.email,
-                bcc: 'ilham.dohaan@happypuppy.id',
-                subject: 'Voucher Undian “OMO! Happup K-Fest”',
+                bcc: bccOutlet,
+                subject: 'Voucher Undian “Happup K-Fest”',
                 html: `<p>Terima Kasih telah bernyanyi dan berpartisipasi pada "OMO! Happup K-Fest".</p>
                 <p>E-voucher dapat diunduh pada lampiran ini.</p>
                 <p>Pengundian dilakukan oleh tim Happy Puppy Official melalui Live IG <a href="https://www.instagram.com/happypuppykaraoke/">@happypuppykaraoke</a> dan akan
