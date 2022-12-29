@@ -49,7 +49,7 @@ const sendEmailVoucher = (emailId) =>{
                 to: emailReceiver.email,
                 bcc: bccOutlet,
                 subject: 'Voucher Undian “Happup K-Fest”',
-                html: `<p>Terima Kasih telah bernyanyi dan berpartisipasi pada "OMO! Happup K-Fest".</p>
+                html: `<p>Terima Kasih telah bernyanyi dan berpartisipasi pada "Happup K-Fest".</p>
                 <p>E-voucher dapat diunduh pada lampiran ini.</p>
                 <p>Pengundian dilakukan oleh tim Happy Puppy Official melalui Live IG <a href="https://www.instagram.com/happypuppykaraoke/">@happypuppykaraoke</a> dan akan
                 diumumkan pada 03 Februari 2023, 03 Maret 2023 dan 08 April 2023.<p>
