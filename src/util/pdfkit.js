@@ -1,4 +1,4 @@
-const { insertFileNameData } = require('../model/voucher-data');
+const { insertFileNameData, updateEmailedMasterEmail, updateEmailedMasterVoucher } = require('../model/voucher-data');
 const muhammara = require('muhammara');
 const logger = require('./logger');
 
@@ -31,6 +31,8 @@ const generatePdf = (voucherCode, emailId) => {
             resolve(true);
         } catch (err) {
             logger.error('failed create pdf');
+            await updateEmailedMasterEmail(emailId, '2')
+            await updateEmailedMasterVoucher(emailId, '2')
             reject(`generatePdf\n${err}`);
         }
     });
