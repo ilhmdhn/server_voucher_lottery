@@ -22,8 +22,8 @@ const postVoucher = async(req, res) =>{
         const canUpload = await checkInvoiceIsGenerated(full_outlet_code, invoice_code);
         const failedVoucher = await checkFailedVoucher(full_outlet_code, invoice_code);
 
-        if(canUpload == false && failedVoucher == false){
-            res.send(response(false, null, 'Voucher Sudah Dikirim'));
+        if(canUpload == false){
+            res.send(response(false, null, 'Invoice sudah pernah digunakan'));
             return
         }
 
@@ -64,6 +64,11 @@ const postVoucher = async(req, res) =>{
 const postMassVoucher = async(req, res)=>{
     try{
         const voucherData = req.body.voucher;
+
+        // if(voucherData.length<1){
+        //     res.send(response(false, null, 'Format tidak didukung atau data kosong'));
+        // }
+
         for(let i=0; i<voucherData.length; i++){
             const voucher_code_temp = voucherData[i].voucher_code_temp;
             const invoice_code = voucherData[i].invoice_code;
@@ -78,7 +83,7 @@ const postMassVoucher = async(req, res)=>{
 
             const canUpload = await checkInvoiceIsGenerated(full_outlet_code, invoice_code);
             const failedVoucher = await checkFailedVoucher(full_outlet_code, invoice_code);
-            if(canUpload == false && failedVoucher == false){
+            if(canUpload == false){
                 continue;
             }
             const email_id = await generateEmailId();
